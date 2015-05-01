@@ -1,0 +1,44 @@
+﻿{
+	"ModuleId": "hknews",
+	"Name": "HKNews modul",
+	"Permissions": [
+		{
+			"PermissionId": "ElsoPermission",
+			"Name": "Első jogosultság"
+		},
+		{
+			"PermissionId": "MasodikPermission",
+			"Name": "Második jogosultság"
+		}
+	],
+	"Menus": [
+		{
+			"MenuId": "hknews",
+			"Title": "HKNews",
+			"Route":  "/HKNews/Index",
+			"PermissionId": "",
+			"ParentMenuId": null
+		},
+		{
+			"MenuId": "hknews.new",
+			"Title": "Hírlevél összeállítása",
+			"Route":  "/HKNews/Edit",
+			"PermissionId": "",
+			"ParentMenuId": "hknews"
+		},
+		{
+			"MenuId": "hknews.list",
+			"Title": "Levelek listázása",
+			"Route":  "/HKNews/Index",
+			"PermissionId": "",
+			"ParentMenuId": "hknews"
+		},
+		{
+			"MenuId": "hknews.settings",
+			"Title": "Beállítások",
+			"Route":  "/HKNews/Settings",
+			"PermissionId": "",
+			"ParentMenuId": "hknews"
+		}
+	]
+}

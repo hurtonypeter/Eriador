@@ -8,9 +8,9 @@ using Microsoft.AspNet.Mvc.Filters;
 namespace Eriador.Framework.Security
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public class PermissionauthorizeAttribute : Attribute
+    public class PermissionAuthorizeAttribute : AuthorizeAttribute
     {
+        public string Permission { get; set; }
 
-        
     }
 }

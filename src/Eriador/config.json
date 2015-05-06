@@ -1,10 +1,24 @@
 {
-  "AppSettings": {
-    "SiteTitle": "Eriador"
-  },
-  "Data": {
-    "DefaultConnection": {
-      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-Eriador-2fc2e9fa-83dd-4cf6-a997-f45113287af9;Trusted_Connection=True;MultipleActiveResultSets=true"
+    "AppSettings": {
+        "SiteTitle": "Eriador",
+        "Theme": "Default"
+    },
+    "Data": {
+        "DefaultConnection": {
+            "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-Eriador-2fc2e9fa-83dd-4cf6-a997-f45113287af9;Trusted_Connection=True;MultipleActiveResultSets=true"
+        }
+    },
+    "News": {
+        "rpublisher": "Kiadó Kázmér",
+        "reditor": "Felelõs Ferenc"
+    },
+    "Probamodul": {
+        "demohoz": {
+            "key1": "value1",
+            "key2": "value2"
+        },
+        "strings": {
+            "key1": "ez itt egy string"
+        }
     }
-  }
 }

@@ -1,0 +1,123 @@
+﻿@model Eriador.Modules.HKNews.Models.NewsPaperViewModel
+
+<script>
+    var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
+</script>
+
+<div ng-app="editnews" ng-controller="editNewsController">
+    
+    <h2>Hírlevél szerkesztése</h2>
+    
+
+    <div role="form">
+        <div class="form-group">
+            <label for="RPublisher">Felelős kiadó</label>
+            <input type="text" class="form-control" id="RPublisher" ng-model="model.RPublisher" >
+        </div>
+        <div class="form-group">
+            <label for="REditor">Felelős szerkesztő</label>
+            <input type="text" class="form-control" id="REditor" ng-model="model.REditor">
+        </div>
+        <div class="form-group">
+            <label for="Editor">Szerkesztő</label>
+            <input type="text" class="form-control" id="Editor" ng-model="model.Editor" ng-disabled="true">
+        </div>
+        <div class="form-group">
+            <label for="Title">Cím</label>
+            <input type="text" class="form-control" id="Title" ng-model="model.Title">
+        </div>
+    </div>
+    <button ng-click="ujhir()" class="btn btn-primary">Új hír hozzáadása</button>
+    <button ng-click="ujhir()" class="btn btn-default">Hír importálása</button>
+
+    <br /><br />
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Cím</th>
+                <th>Törzs</th>
+                <th>Műveletek</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="hir in model.News">
+                <td><a href="{{hir.Link}}">{{hir.Title}}</a></td>
+                <td ng-bind-html="hir.Body"></td>
+                <td>
+                    <span class="glyphicon glyphicon-pencil" ng-click="dummy()" aria-hidden="true"></span>
+                    <span class="glyphicon glyphicon-remove" ng-click="dummy()" aria-hidden="true"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script type="text/ng-template" id="ujHirModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Új hír hozzáadása</h3>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="UjHirCim">Cím</label>
+                <input type="text" class="form-control" id="UjHirCim" ng-model="ujhir.Title">
+            </div>
+            <div class="form-group">
+                <label for="UjHirLink">Link</label>
+                <input type="text" class="form-control" id="UjHirLink" ng-model="ujhir.Link">
+            </div>
+            <div class="form-group">
+                <label for="UjHirTorzs">Törzs</label>
+                <div class="form-control" ckeditor="" ng-model="ujhir.Body" id="UjHirTorzs"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-success" ng-click="ok()">OK</button>
+        </div>
+    </script>
+</div>
+
+<script src="~/lib/ckeditor/ckeditor.js"></script>
+<script src="~/lib/angularjs/angular.js"></script>
+<script src="~/lib/angular-sanitize/angular-sanitize.js"></script>
+<script src="~/lib/angular-bootstrap/ui-bootstrap.js"></script>
+<script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<script src="~/lib/angular-ckeditor/angular-ckeditor.js"></script>
+<script>
+
+(function () {
+    "use strict";
+
+    angular.module("editnews", ['ckeditor', 'ui.bootstrap', 'ngSanitize'])
+    .controller("editNewsController", function ($http, $scope, $window, $modal) {
+        $scope.model = $window.model;
+
+        $scope.ujhir = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'ujHirModal.html',
+                controller: 'UjhirModalController'
+            });
+
+            modalInstance.result.then(function (ujhir) {
+                $scope.model.News.push(ujhir);
+            }, function () {
+                
+            });
+        };
+
+        $scope.dummy = function () {
+
+        };
+    })
+    .controller('UjhirModalController', function ($scope, $modalInstance) {
+        $scope.ok = function () {
+            $modalInstance.close($scope.ujhir);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    });
+
+})();
+    
+</script>

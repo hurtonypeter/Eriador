@@ -12,8 +12,15 @@ namespace Eriador.Framework.Security
         public static IServiceCollection AddPermissionAuthorization(this IServiceCollection services)
         {
             services.AddOptions();
-            services.TryAdd(ServiceDescriptor.Transient<IAuthorizationService, PermissionAuthorizationService>());
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, ClaimsAuthorizationHandler>());
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, DenyAnonymousAuthorizationHandler>());
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, PassThroughAuthorizationHandler>());
+
+            services.Add(ServiceDescriptor.Transient<IAuthorizationService, PermissionAuthorizationService>());
             services.AddTransient<IAuthorizationHandler, PermissionAuthorizationHandler>();
+            //services.Replace(ServiceDescriptor.Transient<IAuthorizationService, PermissionAuthorizationService>());
+            //services.Replace(ServiceDescriptor.Transient<IAuthorizationHandler, PermissionAuthorizationHandler>());
+
 
             return services;
         }

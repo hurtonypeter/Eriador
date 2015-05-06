@@ -15,6 +15,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Routing;
 using Microsoft.Data.Entity;
+using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.OptionDescriptors;
 using Microsoft.Framework.ConfigurationModel;
 using Microsoft.Framework.DependencyInjection;
 using Microsoft.Framework.Logging;
@@ -25,7 +27,10 @@ using Eriador.Models.Data;
 using Eriador.Models.Data.Entity;
 using Eriador.Framework.Bootstrap;
 using Eriador.Framework.Security;
+using Eriador.Framework.Theme;
 using Eriador.Framework.Services.Auth;
+using Eriador.Framework.Services.Settings;
+using Microsoft.AspNet.Authorization;
 
 namespace Eriador
 {
@@ -82,24 +87,41 @@ namespace Eriador
                 options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
             });
 
+            services.AddPermissionAuthorization();
+            services.ConfigureAuthorization(c =>
+            {
+                c.AddPolicy("Permission", b =>
+                {
+                    b.AddRequirements(new PermissionAuthorizationRequirements());
+                });
+            });
             // Add MVC services to the services container.
             services.AddMvc();
 
-            services.AddPermissionAuthorization();
+
+            services.ConfigureMvc(m =>
+            {
+                m.ViewEngines.Clear();
+                m.ViewEngines.Add(typeof(ThemedRazorViewEngine));
+            });
 
             services.AddEriador();
             services.AddSingleton<IAuthService, AuthService>();
+            services.AddSingleton<ISettingsService, SettingsService>();
 
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
             services.AddWebApiConventions();
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, ClaimsAuthorizationHandler>());
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, DenyAnonymousAuthorizationHandler>());
+            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, PassThroughAuthorizationHandler>());
         }
 
         // Configure is called after ConfigureServices is called.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerfactory)
         {
             // Configure the HTTP request pipeline.
-
+            
             // Add the console logger.
             loggerfactory.AddConsole(minLevel: LogLevel.Warning);
 

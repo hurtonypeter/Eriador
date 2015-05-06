@@ -22,7 +22,12 @@ gulp.task("copy", ["clean"], function () {
     "hammer.js": "hammer.js/hammer*.{js,map}",
     "jquery": "jquery/jquery*.{js,map}",
     "jquery-validation": "jquery-validation/jquery.validate.js",
-    "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"
+    "jquery-validation-unobtrusive": "jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "angularjs": "angularjs/angular*.{js,map}",
+    "angular-sanitize": "angular-sanitize/angular-sanitize*.{js,map}",
+    "angular-bootstrap": "angular-bootstrap/**/*",
+    "angular-ckeditor": "angular-ckeditor/angular-ckeditor*.{js,map}",
+    "ckeditor": "ckeditor/**/*"
   }
 
   for (var destinationDir in bower) {

@@ -2,43 +2,51 @@
 	"ModuleId": "hknews",
 	"Name": "HKNews modul",
 	"Permissions": [
-		{
-			"PermissionId": "ElsoPermission",
-			"Name": "Első jogosultság"
+        {
+            "PermissionId": "ListSentMails",
+            "Name": "Elküldött levelek listázása"
+        },
+        {
+			"PermissionId": "ListAllMails",
+			"Name": "Minden levél listázása"
 		},
 		{
-			"PermissionId": "MasodikPermission",
-			"Name": "Második jogosultság"
+			"PermissionId": "SendMail",
+			"Name": "Levél küldése"
+		},
+		{
+			"PermissionId": "MailSettings",
+			"Name": "Hírlevél beállítások kezelése"
 		}
 	],
 	"Menus": [
 		{
-			"MenuId": "hknews",
+			"MenuId": "news",
 			"Title": "HKNews",
-			"Route":  "/HKNews/Index",
+			"Route": "/HKNews/Index",
 			"PermissionId": "",
 			"ParentMenuId": null
 		},
 		{
-			"MenuId": "hknews.new",
+			"MenuId": "news.new",
 			"Title": "Hírlevél összeállítása",
-			"Route":  "/HKNews/Edit",
-			"PermissionId": "",
-			"ParentMenuId": "hknews"
+			"Route": "/HKNews/Edit",
+			"PermissionId": "SendMail",
+			"ParentMenuId": "news"
 		},
 		{
-			"MenuId": "hknews.list",
+			"MenuId": "news.list",
 			"Title": "Levelek listázása",
-			"Route":  "/HKNews/Index",
-			"PermissionId": "",
-			"ParentMenuId": "hknews"
+			"Route": "/HKNews/Index",
+			"PermissionId": "ListSentMails",
+			"ParentMenuId": "news"
 		},
 		{
-			"MenuId": "hknews.settings",
+			"MenuId": "news.settings",
 			"Title": "Beállítások",
-			"Route":  "/HKNews/Settings",
-			"PermissionId": "",
-			"ParentMenuId": "hknews"
+			"Route": "/HKNews/Settings",
+			"PermissionId": "MailSettings",
+			"ParentMenuId": "news"
 		}
 	]
 }

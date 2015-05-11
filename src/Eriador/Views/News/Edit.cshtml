@@ -1,14 +1,14 @@
-﻿@model Eriador.Modules.HKNews.Models.NewsPaperViewModel
+﻿@model Eriador.Modules.News.Models.NewsPaperViewModel
 
 <script>
     var model = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(Model));
 </script>
 
 <div ng-app="editnews" ng-controller="editNewsController">
-    
     <h2>Hírlevél szerkesztése</h2>
-    
 
+    <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</alert>
+    
     <div role="form">
         <div class="form-group">
             <label for="RPublisher">Felelős kiadó</label>
@@ -27,8 +27,8 @@
             <input type="text" class="form-control" id="Title" ng-model="model.Title">
         </div>
     </div>
-    <button ng-click="ujhir()" class="btn btn-primary">Új hír hozzáadása</button>
-    <button ng-click="ujhir()" class="btn btn-default">Hír importálása</button>
+    <button ng-click="edithir(-1)" class="btn btn-primary">Új hír hozzáadása</button>
+    <button ng-click="importhir()" class="btn btn-default">Hír importálása</button>
 
     <br /><br />
     <table class="table table-bordered table-hover">
@@ -36,7 +36,7 @@
             <tr>
                 <th>Cím</th>
                 <th>Törzs</th>
-                <th>Műveletek</th>
+                <th style="width: 1%;">Műveletek</th>
             </tr>
         </thead>
         <tbody>
@@ -44,34 +44,54 @@
                 <td><a href="{{hir.Link}}">{{hir.Title}}</a></td>
                 <td ng-bind-html="hir.Body"></td>
                 <td>
-                    <span class="glyphicon glyphicon-pencil" ng-click="dummy()" aria-hidden="true"></span>
-                    <span class="glyphicon glyphicon-remove" ng-click="dummy()" aria-hidden="true"></span>
+                    <a href="#" ng-click="edithir($index)"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+                    <a href="#" ng-click="deletehir($index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <script type="text/ng-template" id="ujHirModal.html">
+    <p class="text-right">
+        <a asp-controller="News" asp-action="Index" class="btn btn-default">Mégsem</a>
+        <button type="button" class="btn btn-success" ng-click="save()">Mentés</button>
+    </p>
+
+    <script type="text/ng-template" id="editHirModal.html">
         <div class="modal-header">
             <h3 class="modal-title">Új hír hozzáadása</h3>
         </div>
         <div class="modal-body">
             <div class="form-group">
                 <label for="UjHirCim">Cím</label>
-                <input type="text" class="form-control" id="UjHirCim" ng-model="ujhir.Title">
+                <input type="text" class="form-control" id="UjHirCim" ng-model="hir.fields.Title">
             </div>
             <div class="form-group">
                 <label for="UjHirLink">Link</label>
-                <input type="text" class="form-control" id="UjHirLink" ng-model="ujhir.Link">
+                <input type="text" class="form-control" id="UjHirLink" ng-model="hir.fields.Link">
             </div>
             <div class="form-group">
                 <label for="UjHirTorzs">Törzs</label>
-                <div class="form-control" ckeditor="" ng-model="ujhir.Body" id="UjHirTorzs"></div>
+                <div class="form-control" ckeditor="" ng-model="hir.fields.Body" id="UjHirTorzs"></div>
             </div>
         </div>
         <div class="modal-footer">
             <button class="btn btn-default" ng-click="cancel()">Cancel</button>
             <button class="btn btn-success" ng-click="ok()">OK</button>
+        </div>
+    </script>
+    
+    <script type="text/ng-template" id="importHirModal.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Új hír hozzáadása</h3>
+        </div>
+        <div class="modal-body">
+            <p>Importálható hírek:</p>
+            <ul>
+                <li ng-repeat="item in news"><a ng-click="select($index)">{{item.Title}}</a></li>
+            </ul>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-default" ng-click="close()">Bezárás</button>
         </div>
     </script>
 </div>
@@ -82,6 +102,8 @@
 <script src="~/lib/angular-bootstrap/ui-bootstrap.js"></script>
 <script src="~/lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
 <script src="~/lib/angular-ckeditor/angular-ckeditor.js"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">google.load("feeds", "1");</script>
 <script>
 
 (function () {
@@ -91,26 +113,116 @@
     .controller("editNewsController", function ($http, $scope, $window, $modal) {
         $scope.model = $window.model;
 
-        $scope.ujhir = function () {
+        $scope.edithir = function (index) {
             var modalInstance = $modal.open({
-                templateUrl: 'ujHirModal.html',
-                controller: 'UjhirModalController'
+                templateUrl: 'editHirModal.html',
+                controller: 'EdithirModalController',
+                resolve: {
+                    hir: function () {
+                        //return index == -1 ? { index: index {Id: 0, Title: '', Link: '', Body: ''} : { index: index, hir: angular.copy($scope.model.News[index]) };
+                        return { 
+                            index: index, 
+                            fields: index == -1 ? {Id: 0, Title: '', Link: '', Body: ''} : angular.copy($scope.model.News[index]) 
+                        };
+                    }
+                }
             });
 
-            modalInstance.result.then(function (ujhir) {
-                $scope.model.News.push(ujhir);
+            modalInstance.result.then(function (hir) {
+                if (hir.index == -1) {
+                    $scope.model.News.push(hir.fields);
+                }
+                else {
+                    $scope.model.News[hir.index].Title = hir.fields.Title;
+                    $scope.model.News[hir.index].Link = hir.fields.Link;
+                    $scope.model.News[hir.index].Body = hir.fields.Body;
+                }
             }, function () {
                 
             });
         };
 
-        $scope.dummy = function () {
+        $scope.importhir = function () {
+            var modalInstance = $modal.open({
+                templateUrl: 'importHirModal.html',
+                controller: 'ImporthirModalController'
+            });
 
+            modalInstance.result.then(function (importhir) {
+                $scope.model.News.push(importhir);
+            }, function () {
+                
+            });
+        };
+
+        $scope.deletehir = function (index) {
+            $scope.model.News.splice(index, 1);
+        }
+
+        $scope.save = function () {
+            $http.post('@Url.Action("Edit", "News")', $scope.model).success(function (result) {
+                if (!result.error) {
+                    window.location.href = result.redirectToUrl;
+                }
+                else {
+                    $scope.alerts.push({type: 'error', msg: result.errorMessage });
+                }
+            })
+            .error(function () {
+                $scope.alerts.push({type: 'error', msg: 'Hiba történt a kérés teljesítése során!' });
+            });
+        };
+
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
         };
     })
-    .controller('UjhirModalController', function ($scope, $modalInstance) {
+    .controller('EdithirModalController', function ($scope, $modalInstance, hir) {
+        $scope.hir = hir;
         $scope.ok = function () {
-            $modalInstance.close($scope.ujhir);
+            $modalInstance.close($scope.hir);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    })
+    .controller('ImporthirModalController', function ($scope, $modalInstance) {
+        $scope.news = [];
+
+        function loadRss() {
+            try {
+                var feed = new google.feeds.Feed("http://vik.hk/rss.xml");
+                feed.setResultFormat(google.feeds.Feed.JSON_FORMAT);
+                feed.load(function (result) {
+                    if(!result.error) {
+                        $scope.news = [];
+                        for (var i = 0; i < result.feed.entries.length; i++) {
+                            var entry = result.feed.entries[i];
+                            $scope.news.push({
+                                Id: 0,
+                                Title: entry.title,
+                                Link: entry.link,
+                                Body: entry.content
+                            });
+                        }
+                        $scope.$apply();
+                    }
+                    else {
+                        console.log(result);
+                    }
+                });
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        loadRss();
+
+        $scope.select = function (index) {
+            $modalInstance.close($scope.news[index]);
+        };
+        $scope.close = function () {
+            $modalInstance.dismiss('cancel');
         };
 
         $scope.cancel = function () {

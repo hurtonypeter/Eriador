@@ -9,6 +9,8 @@ namespace Eriador.Framework.Services.Auth
     public interface IAuthService
     {
         int CurrentUserId();
+        string CurrentUserName();
+        User CurrentUser();
         bool IsAuthenticated();
         IEnumerable<Permission> CurrentPermissions();
         IEnumerable<string> CurrentPermissionNames();

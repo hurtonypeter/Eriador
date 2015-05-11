@@ -15,10 +15,7 @@ namespace Eriador.Controllers
     public class HomeController : Controller
     {
         private IAuthService AuthService;
-
         
-        public IOptions<AppSettings> fds { get; set; }
-
         private ISettingsService Settings;
 
         public HomeController(IAuthService authService, ISettingsService settings)
@@ -28,25 +25,6 @@ namespace Eriador.Controllers
         }
         public IActionResult Index()
         {
-            AuthService.CurrentPermissions();
-            //fds.Options.Theme = "huhuhuhu";
-            //Settings.Set("puff", "piff");
-            return View();
-        }
-
-        public IActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            //var dsf = fds.Options.Theme;
-            var asd = Settings.Get("puff");
-            return View();
-        }
-
-        [PermissionAuthorize(Permission = "proba", Policy = "Permission")]
-        public IActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
             return View();
         }
 

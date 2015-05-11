@@ -1,0 +1,33 @@
+﻿@model List<Eriador.Modules.News.Models.Data.Entity.NewsPaper>
+
+<h2>Levelek listázása</h2>
+
+<p><a asp-controller="News" asp-action="Edit" class="btn btn-primary">Új hírlevél összeállítása</a></p>
+
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Cím</th>
+            <th>Szerkesztő</th>
+            <th>Elküldve</th>
+            <th>Státusz</th>
+            <th>Műveletek</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Title</td>
+                <td>@item.Editor.FullName</td>
+                <td>@item.Sent</td>
+                <td>@item.Status</td>
+                <td>
+                    @Html.ActionLink("Szerkesztés", "Edit", "News", new { id = item.Id }, new { @class = "btn btn-xs btn-default" })
+                    @Html.ActionLink("Törlés", "Delete", "News", new { id = item.Id }, new { @class = "btn btn-xs btn-default" })
+                    @Html.ActionLink("Küldés", "Send", "News", new { id = item.Id }, new { @class = "btn btn-xs btn-default" })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -86,6 +86,15 @@ namespace Eriador.Migrations
                         b.Annotation("Relational:TableName", "AspNetRoles");
                     });
                 
+                builder.Entity("Eriador.Models.Data.Entity.RolePermission", b =>
+                    {
+                        b.Property<int>("PermissionId")
+                            .Annotation("OriginalValueIndex", 0);
+                        b.Property<int>("RoleId")
+                            .Annotation("OriginalValueIndex", 1);
+                        b.Key("RoleId", "PermissionId");
+                    });
+                
                 builder.Entity("Eriador.Models.Data.Entity.User", b =>
                     {
                         b.Property<int>("AccessFailedCount")
@@ -97,35 +106,37 @@ namespace Eriador.Migrations
                             .Annotation("OriginalValueIndex", 2);
                         b.Property<bool>("EmailConfirmed")
                             .Annotation("OriginalValueIndex", 3);
+                        b.Property<string>("FullName")
+                            .Annotation("OriginalValueIndex", 4);
                         b.Property<int>("Id")
                             .GenerateValueOnAdd()
-                            .Annotation("OriginalValueIndex", 4)
+                            .Annotation("OriginalValueIndex", 5)
                             .Annotation("SqlServer:ValueGeneration", "Default");
                         b.Property<bool>("LockoutEnabled")
-                            .Annotation("OriginalValueIndex", 5);
-                        b.Property<DateTimeOffset?>("LockoutEnd")
                             .Annotation("OriginalValueIndex", 6);
-                        b.Property<string>("NormalizedEmail")
+                        b.Property<DateTimeOffset?>("LockoutEnd")
                             .Annotation("OriginalValueIndex", 7);
-                        b.Property<string>("NormalizedUserName")
+                        b.Property<string>("NormalizedEmail")
                             .Annotation("OriginalValueIndex", 8);
-                        b.Property<string>("PasswordHash")
+                        b.Property<string>("NormalizedUserName")
                             .Annotation("OriginalValueIndex", 9);
-                        b.Property<string>("PhoneNumber")
+                        b.Property<string>("PasswordHash")
                             .Annotation("OriginalValueIndex", 10);
-                        b.Property<bool>("PhoneNumberConfirmed")
+                        b.Property<string>("PhoneNumber")
                             .Annotation("OriginalValueIndex", 11);
-                        b.Property<string>("SecurityStamp")
+                        b.Property<bool>("PhoneNumberConfirmed")
                             .Annotation("OriginalValueIndex", 12);
-                        b.Property<bool>("TwoFactorEnabled")
+                        b.Property<string>("SecurityStamp")
                             .Annotation("OriginalValueIndex", 13);
-                        b.Property<string>("UserName")
+                        b.Property<bool>("TwoFactorEnabled")
                             .Annotation("OriginalValueIndex", 14);
+                        b.Property<string>("UserName")
+                            .Annotation("OriginalValueIndex", 15);
                         b.Key("Id");
                         b.Annotation("Relational:TableName", "AspNetUsers");
                     });
                 
-                builder.Entity("Eriador.Modules.HKNews.Models.Data.Entity.NewsItem", b =>
+                builder.Entity("Eriador.Modules.News.Models.Data.Entity.NewsItem", b =>
                     {
                         b.Property<string>("Body")
                             .Annotation("OriginalValueIndex", 0);
@@ -143,7 +154,7 @@ namespace Eriador.Migrations
                         b.Key("Id");
                     });
                 
-                builder.Entity("Eriador.Modules.HKNews.Models.Data.Entity.NewsPaper", b =>
+                builder.Entity("Eriador.Modules.News.Models.Data.Entity.NewsPaper", b =>
                     {
                         b.Property<DateTime>("Created")
                             .Annotation("OriginalValueIndex", 0);
@@ -160,10 +171,12 @@ namespace Eriador.Migrations
                             .Annotation("OriginalValueIndex", 4);
                         b.Property<string>("RPublisher")
                             .Annotation("OriginalValueIndex", 5);
-                        b.Property<DateTime>("Sent")
+                        b.Property<DateTime?>("Sent")
                             .Annotation("OriginalValueIndex", 6);
-                        b.Property<string>("Title")
+                        b.Property<int>("Status")
                             .Annotation("OriginalValueIndex", 7);
+                        b.Property<string>("Title")
+                            .Annotation("OriginalValueIndex", 8);
                         b.Key("Id");
                     });
                 
@@ -236,12 +249,18 @@ namespace Eriador.Migrations
                         b.ForeignKey("Eriador.Models.Data.Entity.Module", "ModuleId");
                     });
                 
-                builder.Entity("Eriador.Modules.HKNews.Models.Data.Entity.NewsItem", b =>
+                builder.Entity("Eriador.Models.Data.Entity.RolePermission", b =>
                     {
-                        b.ForeignKey("Eriador.Modules.HKNews.Models.Data.Entity.NewsPaper", "NewsPaperId");
+                        b.ForeignKey("Eriador.Models.Data.Entity.Permission", "PermissionId");
+                        b.ForeignKey("Eriador.Models.Data.Entity.Role", "RoleId");
                     });
                 
-                builder.Entity("Eriador.Modules.HKNews.Models.Data.Entity.NewsPaper", b =>
+                builder.Entity("Eriador.Modules.News.Models.Data.Entity.NewsItem", b =>
+                    {
+                        b.ForeignKey("Eriador.Modules.News.Models.Data.Entity.NewsPaper", "NewsPaperId");
+                    });
+                
+                builder.Entity("Eriador.Modules.News.Models.Data.Entity.NewsPaper", b =>
                     {
                         b.ForeignKey("Eriador.Models.Data.Entity.User", "EditorId");
                     });

@@ -1,0 +1,102 @@
+To: hknews@vik.hk.bme.hu
+From: perseus@vik.hk
+Subject: @ViewBag.Model.Title
+Content-Type: text/html; charset=utf-8
+
+<!DOCTYPE HTML PUBLIC FUNCTION "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>HKNews</title>
+</head>
+<body style="font-family: Georgia; font-size: 12px; color: #505050; margin: 10px 10px 20px 10px;">
+    <div style="width: 700px;">
+        <div style="border-bottom: 1px solid #505050; color: #000; margin-bottom: 20px;">
+            <div>
+                <img src="http://vik.hk/files/files/fejlec.png" alt="HKNews - A BME Villamosmérnöki és Informatikai Kar Hallgatói Képviseletének információs levele" />
+            </div>
+            <div style="float:left;">
+                <div style="font-size: 14px;">
+                    <a style="text-decoration:underline;color:#8E784F" href="http://vik-hk.bme.hu/" target="_blank">http://vik-hk.bme.hu</a> |
+                    <a style="text-decoration:underline;color:#8E784F" href="mailto:hk@vik-hk.bme.hu">hk</a> /
+                    <a style="text-decoration:underline;color:#8E784F" href="mailto:tanulmanyi@vik-hk.bme.hu">tanulmanyi</a> /
+                    <a style="text-decoration:underline;color:#8E784F" href="mailto:szoc@vik-hk.bme.hu">szoc</a> /
+                    <a style="text-decoration:underline;color:#8E784F" href="mailto:palyazat@vik-hk.bme.hu">palyazat</a> /
+                    <a style="text-decoration:underline;color:#8E784F" href="mailto:pr@vik-hk.bme.hu">pr</a>
+                    &#64
+                    <a style="text-decoration:underline;color:#8E784F" href="http://vik-hk.bme.hu/" target="_blank">vik-hk.bme.hu</a>
+                    <a style="text-decoration:underline;color:#8E784F" href="http://www.facebook.com/vik.hk" target="_blank" title="Lájkolj minket facebookon!">
+                        <img src="http://vik.hk/files/files/facebook-logo.png" alt="Lájkolj minket facebookon!" style="margin-left:40px;height:14px;" height="14" />
+                    </a>
+                </div>
+            </div>
+            <div style="float:right">
+                <span style="font-style:italic">@ViewBag.Model.Sent.ToString("yyyy. MMMM. dd.")</span>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div>
+            <h2 style="margin-bottom: 25px; font-size: 22px; border-bottom: 1px dotted #505050;">Tartalom:</h2>
+            @foreach (var item in ViewBag.Model.HKNewsItem)
+            {
+                <div style="margin-left: 20px;">-&nbsp;&nbsp;<a href="#hir_@item.ItemId" style="color: #d98e04; text-decoration: underline">@item.Title</a></div>
+            }
+        </div>
+        <div style="border-bottom: 1px solid #505050; padding-bottom: 10px; margin-bottom: 10px;">
+            @foreach (var item in ViewBag.Model.HKNewsItem)
+            {
+                <a name="hir_@item.ItemId"></a>
+                <h2 style="font-size:18px;margin:30px 0 20px 0;border-bottom:1px dotted #505050">
+                    <a href="@item.Link"
+                       style="color:#505050;text-decoration:none"
+                       target="_blank">@item.Title</a>
+                </h2>
+                @item.Body.Replace("<p>", "<p style='text-align:justify;line-height:20px;margin:10px 0 15px 0'>")
+            }
+        </div>
+        <div style="margin-top: 30px; color: #000000; font-size: 11px">
+            <h2 style="font-size: 16px; margin: 0 0 10px 0; border-bottom: 1px dotted #505050">Elérhetőség:</h2>
+            <p style="text-align: justify; line-height: 20px; margin: 10px 0 15px 0">
+                A Hallgatói Képviselet hirdetményei a HK weboldalára és az I, V1 épületekben, valamint a Schönherz Zoltán Kollégiumban C és D liftek közötti HK-s hirdetőtáblákra kerülnek ki.
+            </p>
+            <p style="text-align: justify; line-height: 20px; margin: 10px 0 15px 0">
+                <strong>Címünk:</strong> 1117 Budapest, Irinyi J. u. 42. 104
+            </p>
+            <p style="text-align: justify; line-height: 20px; margin: 10px 0 15px 0">
+                További elérhetőségeinket keresd a <a style="text-decoration:underline;color:#8E784F;" href="http://vik.hk/elerhetoseg" target="_blank">http://vik.hk/elerhetoseg</a> oldalon.
+            </p>
+            <p style="text-align: justify; line-height: 20px; margin: 10px 0 15px 0">
+                <a style="text-decoration:underline;color:#8E784F;" href="http://vik.hk/ugyelet" target="_blank">A HK ügyeleti időpontjai a 2012/13 tanév őszi félévében.</a>
+            </p>
+            <p style="text-align:justify;line-height:20px;margin:10px 0 15px 0">
+                Amennyiben le szeretnél iratkozni hírlevelünkről, kattints <a href="http://vik-hk.bme.hu/cgi-bin/mailman/listinfo/hknews" style="text-decoration:underline;color:#8e784f" target="_blank">ide</a>.
+            </p>
+            <a style="text-decoration:underline;color:#8E784F;" href="http://vik.hk/" target="_blank" title="vik.hk" class="logo">
+                <img style="float:left;margin-right:5px;min-height:92px" src="http://vik.hk/files/files/diplomafelev_howtok/emailsign.png" height="92" alt="vik.hk" />
+            </a>
+            <div style="padding-top: 3px">
+                <div style="font-weight: bold; margin-bottom: 7px">HKnews — A BME Villamosmérnöki és Informatikai Karának<br />Hallgatói Képviseletének információs levele</div>
+                <div style="width: 130px; display: inline-block; margin-right: 5px"><strong>dátum: </strong></div>
+                <div style="display: inline-block">@ViewBag.Model.Sent.ToString("yyyy. MMMM. dd.")</div>
+                <div></div>
+                <div style="width: 130px; display: inline-block; margin-right: 5px"><strong>felelős kiadó: </strong></div>
+                <div style="display: inline-block">@ViewBag.Model.RPublisher</div>
+                <div></div>
+                <div style="width: 130px; display: inline-block; margin-right: 5px"><strong>felelős szerkesztő: </strong></div>
+                <div style="display: inline-block">@ViewBag.Model.REditor</div>
+                <div></div>
+                <div style="width: 130px; display: inline-block; margin-right: 5px"><strong>szerkesztő: </strong></div>
+                <div style="display: inline-block">@ViewBag.Model.User.FullName</div>
+                <div></div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</body>
+</html>div>
+            <div style="clear:both"></div>
+        </div>
+    </div>
+</body>
+</html>
+</html>

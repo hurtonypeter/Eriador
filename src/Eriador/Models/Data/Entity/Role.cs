@@ -6,7 +6,7 @@ namespace Eriador.Models.Data.Entity
 {
     public class Role : IdentityRole<int>
     {
-        public virtual ICollection<Permission> Permissions { get; set; }
+        public virtual ICollection<RolePermission> Permissions { get; } = new List<RolePermission>();
 
     }
 }

@@ -1,0 +1,29 @@
+﻿@model Eriador.Models.Data.Entity.Role
+
+@{ 
+    ViewBag.Title = Model.Id == default(int) ? "Szerepkör létrehozása" : "Szerepkör szerkesztése";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ConcurrencyStamp)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name)
+        @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Name, null, new { @class = "text-danger" })
+    </div>
+    <p>
+        @Html.ActionLink("Mégsem", "Roles", "People", null, new { @class = "btn btn-default" })
+        @if (Model.Id != default(int))
+        {
+            @Html.ActionLink("Szerepkör törlése", "DeleteRole", "People", new { id = Model.Id }, new { @class = "btn btn-danger" })
+        }
+        <button type="submit" class="btn btn-success"><i class="icon-ok"></i> Mentés</button>
+    </p>
+}

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Eriador.Modules.HKNews.Models
+namespace Eriador.Modules.News.Models
 {
     public class NewsPaperViewModel
     {
+        public int Id { get; set; }
+
         public string Editor { get; set; }
 
         public string RPublisher { get; set; }
@@ -20,6 +22,8 @@ namespace Eriador.Modules.HKNews.Models
 
     public class NewsPaperItemViewModel
     {
+        public int Id { get; set; }
+
         public string Title { get; set; }
 
         public string Link { get; set; }

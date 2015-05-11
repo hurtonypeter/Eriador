@@ -1,0 +1,149 @@
+﻿@model IEnumerable<KeyValuePair<string,string>>
+
+<link rel="stylesheet" href="~/lib/CodeMirror/lib/codemirror.css" />
+<link rel="stylesheet" href="~/lib/CodeMirror/theme/mdn-like.css" />
+<style>
+    .tab-pane {
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        padding: 30px 15px 15px 15px;
+    }
+</style>
+
+
+<h2>Beállítások</h2>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs nav-justified">
+    <li class="active"><a href="#konstansok" data-toggle="tab">Konstansok</a></li>
+    <li><a href="#template" data-toggle="tab">HTML template</a></li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="konstansok">
+        <table class="table table-hover" id="constants">
+            <thead>
+                <tr>
+                    <th>
+                        Beállítás
+                    </th>
+                    <th>
+                        Érték
+                    </th>
+                    <th>Műveletek</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="c-row">
+                        <td class="c-key">@item.Key</td>
+                        <td class="c-value">@item.Value</td>
+                        <td style="width: 215px;">
+                            <a href="#" class="constans-edit">Szerkesztés</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="tab-pane" id="template">
+        <div>
+            <textarea id="code" name="mailtext">@ViewBag.MailTemplate</textarea><br />
+        </div>
+        <button type="button" id="savetemplate" class="btn btn-success">Mentés</button>
+    </div>
+</div>
+
+@section scripts{
+<script src="~/lib/CodeMirror/lib/codemirror.js"></script>
+<script src="~/lib/CodeMirror/mode/xml/xml.js"></script>
+<script src="~/lib/CodeMirror/mode/javascript/javascript.js"></script>
+<script src="~/lib/CodeMirror/mode/css/css.js"></script>
+<script src="~/lib/CodeMirror/mode/htmlmixed/htmlmixed.js"></script>
+<script>
+    $(function () {
+        $('.constans-edit').click(function (event) {
+            event.preventDefault();
+            $('.c-edit-row').remove();
+            $(this).closest('.c-row').after(
+                $('<tr class="c-edit-row"> \
+                       <td></td> \
+                       <td><input type="text" class="form-control c-edit-value" value="' +
+                   $(this).closest('.c-row').find('.c-value').text() + '" /></td> \
+                       <td><a class="btn btn-default c-cancel">Mégsem</a> <a class="btn btn-success c-save">Mentés</a></td> \
+                       </tr>')
+                .fadeIn('slow'));
+        });
+
+        $(document).on('click', '.c-save', function (event) {
+            var eval = $(this).closest('.c-edit-row').find('.c-edit-value').val();
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveSetting", "News")",
+                dataType: "json",
+                data: {
+                    key: $(this).closest('.c-edit-row').prev('.c-row').find('.c-key').text(),
+                    value: eval
+                },
+                success: function (data) {
+                    if (data.saved) {
+                        $('.c-edit-row').prev().find('.c-value').text(eval);
+                        $('.c-edit-row').html('<td colspan="4"><div class="alert alert-success">Sikeres mentés!</div></td>').delay(1000).queue(function (next) {
+                            $('.c-edit-row').fadeOut('slow', function () { $('.c-edit-row').remove(); });
+                            next();
+                        });
+                    }
+                }
+            });
+        });
+        $(document).on('click', '.c-cancel', function (event) {
+            $('.c-edit-row').fadeOut('slow', function () { $('.c-edit-row').remove(); });
+        });
+
+        // ha hash szerint nyitjuk meg az oldalt, alapból azt a tabot nyissa meg
+        var hash = window.location.hash;
+        hash && $('ul.nav a[href="' + hash + '"]').tab('show');
+
+        $('.nav-tabs a').click(function (e) {
+            $(this).tab('show');
+            var scrollmem = $('body').scrollTop();
+            window.location.hash = this.hash;
+            $('html,body').scrollTop(scrollmem);
+        });
+
+        var cm = CodeMirror.fromTextArea(document.getElementById('code'), {
+            mode: "htmlmixed",
+            lineNumbers: true,
+            theme: "mdn-like",
+            lineWrapping: true
+        });
+
+        $('#savetemplate').click(function () {
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("SaveTemplate", "News")",
+                dataType: "json",
+                data: { template: cm.getValue() },
+                success: function (data) {
+                    if (data.saved) {
+                        $('#template').prepend($('<div class="alert alert-success jsonmsg"><strong>OK!</strong> A template sikeresen mentésre került.</div>').fadeIn('slow')).delay(3000).queue(function (next) {
+                            $('.jsonmsg').fadeOut('slow', function () { $(this).remove(); })
+                            next();
+                        });
+                    }
+                    else {
+                        $('#template').prepend($('<div class="alert alert-danger jsonmsg"><strong>HIBA!</strong> A template-et nem sikerült menteni!</div>').fadeIn('slow'));
+                    }
+                },
+                error: function () {
+                    $('#template').prepend($('<div id="error-msg" class="alert alert-danger jsonmsg"><strong>HIBA!</strong> A template-et nem sikerült elküldeni!</div>').fadeIn('slow'));
+                }
+            });
+        });
+    });
+</script>
+}

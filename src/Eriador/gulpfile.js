@@ -27,7 +27,8 @@ gulp.task("copy", ["clean"], function () {
     "angular-sanitize": "angular-sanitize/angular-sanitize*.{js,map}",
     "angular-bootstrap": "angular-bootstrap/**/*",
     "angular-ckeditor": "angular-ckeditor/angular-ckeditor*.{js,map}",
-    "ckeditor": "ckeditor/**/*"
+    "ckeditor": "ckeditor/**/*",
+    "CodeMirror": "codemirror/**/*"
   }
 
   for (var destinationDir in bower) {

@@ -1,0 +1,67 @@
+﻿@model Eriador.Framework.Modules.People.Models.PermissionsTableViewModel
+
+@{ 
+    int colspan = Model.Roles.Count + 1;
+}
+
+<h2>Jogosultságok</h2>
+
+<p class="text-right">
+    <a asp-controller="People" asp-action="Index" class="btn btn-default"><i class="icon-check"></i> Felhasználók</a>&nbsp;&nbsp;
+    <a asp-controller="People" asp-action="Roles" class="btn btn-default"><i class="icon-tags"></i> Szerepkörök</a>
+</p>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <table class="table table-condensed table-hover table-striped">
+        <thead>
+            <tr>
+                <th>&nbsp;</th>
+                @for(int i = 0; i < Model.Roles.Count; i++)
+                {
+                    <th>
+                        @Html.DisplayFor(m => Model.Roles[i].Name)
+                        @Html.HiddenFor(m => Model.Roles[i].Id)
+                        @Html.HiddenFor(m => Model.Roles[i].Name)
+                    </th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Modules.Count; i++)
+            {
+                <tr>
+                    <td colspan="@colspan">
+                        <b>
+                            @Html.DisplayFor(m => m.Modules[i].ModuleName)
+                            @Html.HiddenFor(m => m.Modules[i].ModuleName)
+                        </b>
+                    </td>
+                </tr>
+
+                for (int j = 0; j < Model.Modules[i].Permissions.Count; j++)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(m => m.Modules[i].Permissions[j].PermissionName)
+                            @Html.HiddenFor(m => m.Modules[i].Permissions[j].PermissionName)
+                            @Html.HiddenFor(m => m.Modules[i].Permissions[j].PermissionId)
+                        </td>
+                        @for (int k = 0; k < Model.Modules[i].Permissions[j].Roles.Count; k++)
+                        {
+                            <td>
+                                @Html.CheckBoxFor(m => m.Modules[i].Permissions[j].Roles[k])
+                                @Html.HiddenFor(m => m.Modules[i].Permissions[j].Roles[k])
+                            </td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+    <div class="text-right">
+        <button type="submit" class="btn btn-success">Mentés</button>
+    </div>
+}

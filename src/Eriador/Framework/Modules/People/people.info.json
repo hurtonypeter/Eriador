@@ -1,3 +1,48 @@
 ﻿{
-	
+    "ModuleId": "people",
+    "Name": "Felhasználó modul",
+    "Permissions": [
+        {
+            "PermissionId": "ManageUsers",
+            "Name": "Felhasználók kezelése"
+        },
+        {
+            "PermissionId": "ManageRoles",
+            "Name": "Szerepkörök kezelése"
+        },
+        {
+            "PermissionId": "ManagePermissions",
+            "Name": "Jogosultságok kezelése"
+        }
+    ],
+    "Menus": [
+        {
+            "MenuId": "people",
+            "Title": "Emberek",
+            "Route": "/People/Index",
+            "PermissionId": "",
+            "ParentMenuId": null
+        },
+        {
+			"MenuId": "people.users",
+			"Title": "Felhasználók",
+			"Route": "/People/Index",
+			"PermissionId": "",
+			"ParentMenuId": "people"
+		},
+        {
+			"MenuId": "people.roles",
+			"Title": "Szerepkörök",
+			"Route": "/People/Roles",
+			"PermissionId": "",
+			"ParentMenuId": "people"
+		},
+        {
+			"MenuId": "people.permissions",
+			"Title": "Jogosultságok",
+			"Route": "/People/Permissions",
+			"PermissionId": "",
+			"ParentMenuId": "people"
+		}
+    ]
 }

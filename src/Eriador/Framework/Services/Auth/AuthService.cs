@@ -66,6 +66,18 @@ namespace Eriador.Framework.Services.Auth
             }
         }
 
+        public string CurrentUserName()
+        {
+            if (IsAuthenticated())
+            {
+                return HttpContext.User.GetUserName();
+            }
+            else
+            {
+                return "anonymous";
+            }
+        }
+
         /// <summary>
         /// Megmondja, hogy van-e bejelentkezve felhasználó.
         /// </summary>
@@ -73,6 +85,15 @@ namespace Eriador.Framework.Services.Auth
         public bool IsAuthenticated()
         {
             return HttpContext.User.Identity.IsAuthenticated;
+        }
+
+        /// <summary>
+        /// Visszaadja az aktuális felhasználót, ha nincs authentikálva, akkor az anonymous felhasználót
+        /// </summary>
+        /// <returns></returns>
+        public User CurrentUser()
+        {
+            return db.Users.Single(u => u.Id == CurrentUserId());
         }
 
         /// <summary>
@@ -85,7 +106,7 @@ namespace Eriador.Framework.Services.Auth
             //List<Permission> permissions = Cache.Get("currentpermissions:" + CurrentUserId()) as List<Permission>;
             //if (permissions == null)
             //{
-                var raw = @"select [Permission].[Id], [Permission].[MachineReadableName], [Permission].[ModuleId], [Permission].[Name] from [Permission] join [AspNetRolePermissions] on [Permission].[Id] = [AspNetRolePermissions].[PermissionId] join [AspNetRoles] on [AspNetRolePermissions].[RoleId] = [AspNetRoles].[Id] join [AspNetUserRoles] on [AspNetRoles].[Id] = [AspNetUserRoles].[RoleId] join [AspNetUsers] on [AspNetUserRoles].[UserId] = [AspNetUsers].[Id] where [AspNetUsers].[Id] = ";
+                var raw = @"select [Permission].[Id], [Permission].[MachineReadableName], [Permission].[ModuleId], [Permission].[Name] from [Permission] join [RolePermission] on [Permission].[Id] = [RolePermission].[PermissionId] join [AspNetRoles] on [RolePermission].[RoleId] = [AspNetRoles].[Id] join [AspNetUserRoles] on [AspNetRoles].[Id] = [AspNetUserRoles].[RoleId] join [AspNetUsers] on [AspNetUserRoles].[UserId] = [AspNetUsers].[Id] where [AspNetUsers].[Id] = ";
                 raw += CurrentUserId();
                 var permissions = db.Permissions.FromSql(raw).ToList();
 
@@ -113,7 +134,7 @@ namespace Eriador.Framework.Services.Auth
         /// <returns></returns>
         public bool HasPermission(string perm)
         {
-            return CurrentPermissionNames().Any(p => p.ToLower() == perm.ToLower());
+            return string.IsNullOrWhiteSpace(perm) ? true : CurrentPermissionNames().Any(p => p.ToLower() == perm.ToLower());
         }
         
 
@@ -132,12 +153,13 @@ namespace Eriador.Framework.Services.Auth
                     currentUserId = db.Users.Single(u => u.UserName == "anonymous").Id;
                 }
 
-                var raw = @"select [Permission].[Id], [Permission].[MachineReadableName], [Permission].[ModuleId], [Permission].[Name] from [Permission] join [AspNetRolePermissions] on [Permission].[Id] = [AspNetRolePermissions].[PermissionId] join [AspNetRoles] on [AspNetRolePermissions].[RoleId] = [AspNetRoles].[Id] join [AspNetUserRoles] on [AspNetRoles].[Id] = [AspNetUserRoles].[RoleId] join [AspNetUsers] on [AspNetUserRoles].[UserId] = [AspNetUsers].[Id] where [AspNetUsers].[Id] = ";
+                var raw = @"select [Permission].[Id], [Permission].[MachineReadableName], [Permission].[ModuleId], [Permission].[Name] from [Permission] join [RolePermission] on [Permission].[Id] = [RolePermission].[PermissionId] join [AspNetRoles] on [RolePermission].[RoleId] = [AspNetRoles].[Id] join [AspNetUserRoles] on [AspNetRoles].[Id] = [AspNetUserRoles].[RoleId] join [AspNetUsers] on [AspNetUserRoles].[UserId] = [AspNetUsers].[Id] where [AspNetUsers].[Id] = ";
                 raw += currentUserId;
                 var permissions = db.Permissions.FromSql(raw).ToList().Select(p => p.MachineReadableName);
 
                 return permissions.Any(p => p.ToLower() == perm.ToLower());
             }
         }
+
     }
 }

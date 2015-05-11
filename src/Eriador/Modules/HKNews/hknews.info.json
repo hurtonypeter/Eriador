@@ -1,6 +1,6 @@
 ﻿{
-	"ModuleId": "hknews",
-	"Name": "HKNews modul",
+	"ModuleId": "news",
+	"Name": "News modul",
 	"Permissions": [
         {
             "PermissionId": "ListSentMails",
@@ -15,6 +15,10 @@
 			"Name": "Levél küldése"
 		},
 		{
+			"PermissionId": "DeleteMail",
+			"Name": "Levél törlése"
+		},
+		{
 			"PermissionId": "MailSettings",
 			"Name": "Hírlevél beállítások kezelése"
 		}
@@ -22,29 +26,29 @@
 	"Menus": [
 		{
 			"MenuId": "news",
-			"Title": "HKNews",
-			"Route": "/HKNews/Index",
+			"Title": "News",
+			"Route": "/News/Index",
 			"PermissionId": "",
 			"ParentMenuId": null
 		},
 		{
 			"MenuId": "news.new",
 			"Title": "Hírlevél összeállítása",
-			"Route": "/HKNews/Edit",
+			"Route": "/News/Edit",
 			"PermissionId": "SendMail",
 			"ParentMenuId": "news"
 		},
 		{
 			"MenuId": "news.list",
 			"Title": "Levelek listázása",
-			"Route": "/HKNews/Index",
+			"Route": "/News/Index",
 			"PermissionId": "ListSentMails",
 			"ParentMenuId": "news"
 		},
 		{
 			"MenuId": "news.settings",
 			"Title": "Beállítások",
-			"Route": "/HKNews/Settings",
+			"Route": "/News/Settings",
 			"PermissionId": "MailSettings",
 			"ParentMenuId": "news"
 		}

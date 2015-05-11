@@ -1,0 +1,51 @@
+﻿@model List<Eriador.Models.Data.Entity.User>
+
+<h2>Felhasználók</h2>
+
+<p style="float:left;">
+    <a href="@Url.Action("EditUser", "People")" class="btn btn-primary"><i class="icon-plus"></i> Új felhasználó létrehozása</a>
+</p>
+<p style="float:right;">
+    <a href="@Url.Action("Roles", "People")" class="btn btn-default"><i class="icon-tags"></i> Szerepkörök</a>&nbsp;&nbsp;
+    <a href="@Url.Action("Permissions", "People")" class="btn btn-default"><i class="icon-check"></i> Jogosultságok</a>
+</p>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Felhasználónév</th>
+            <th>Teljes név</th>
+            <th>E-mail</th>
+            <th>Állapot</th>
+            <th>Műveletek</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (item.LockoutEnabled)
+                    {
+                        <span class="label label-default">zárolt (@item.LockoutEnd.Value.ToString())</span>
+                    }
+                    else
+                    {
+                        <span class="label label-success">aktív</span>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("EditUser", "People", new { id = item.Id })" class="btn btn-xs btn-default"><i class="icon-edit"></i> Szerkesztés</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

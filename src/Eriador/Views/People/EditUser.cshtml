@@ -1,0 +1,73 @@
+﻿@model Eriador.Framework.Modules.People.Models.EditUserViewModel
+
+@{ 
+    ViewBag.Title = Model.User.Id == default(int) ? "Felhasználó létrehozása" : "Felhasználó szerkesztése";
+}
+
+<h2>@ViewBag.Title</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="row">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.User.Id)
+        @Html.HiddenFor(m => m.User.ConcurrencyStamp)
+        @Html.HiddenFor(m => m.User.SecurityStamp)
+
+        <div class="col-md-6">
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.UserName)
+                @Html.TextBoxFor(model => model.User.UserName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.User.UserName, null, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.Email)
+                @Html.TextBoxFor(model => model.User.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.User.Email, null, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.User.FullName)
+                @Html.TextBoxFor(model => model.User.FullName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.User.FullName, null, new { @class = "text-danger" })
+            </div>
+            @if (Model.User.Id != default(int))
+            {
+                <p>Jelszót csak akkor kell megadni, ha változtatni szeretnél rajta!</p>
+            }
+            <div class="form-group">
+                @Html.Label("Password")
+                @Html.Password("Password", null, new { @class = "form-control" })
+                @Html.ValidationMessage("Password", new { @class = "text-danger" })
+            </div>
+            <div class="form-group">                
+                @Html.Label("PasswordConfirmation")
+                @Html.Password("PasswordConfirmation", null, new { @class = "form-control" })
+                @Html.ValidationMessage("PasswordConfirmation", new { @class = "text-danger" })
+            </div>
+            <p>
+                @Html.ActionLink("Mégsem", "Index", "People", null, new { @class = "btn btn-default" })
+                @if (Model.User.Id != default(int))
+                {
+                    @Html.ActionLink("Felhasználó törlése", "DeleteUser", "People", new { id = Model.User.Id }, new { @class = "btn btn-danger" })
+                }
+                <button type="submit" class="btn btn-success"><i class="icon-ok"></i> Mentés</button>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label>Szerepkörök</label>
+            </div>
+            <div class="editor-field">
+                @for (int i = 0; i < Model.UserRoles.Count; i++)
+                {
+                    @Html.CheckBoxFor(m => m.UserRoles[i].Checked, new { })
+                    @Html.HiddenFor(m => m.UserRoles[i].Name)
+                    <label for="UserRoles[@i].Checked" style="display:inline-block;">@Html.DisplayFor(m => m.UserRoles[i].Name)</label><br />
+                }
+            </div>
+        </div>
+    </div>
+}

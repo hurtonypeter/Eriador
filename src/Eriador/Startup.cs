@@ -31,6 +31,7 @@ using Eriador.Framework.Theme;
 using Eriador.Framework.Services.Auth;
 using Eriador.Framework.Services.Settings;
 using Microsoft.AspNet.Authorization;
+using Eriador.Framework.Services.UserService;
 
 namespace Eriador
 {
@@ -87,17 +88,17 @@ namespace Eriador
                 options.ClientSecret = Configuration["Authentication:MicrosoftAccount:ClientSecret"];
             });
 
-            services.AddPermissionAuthorization();
-            services.ConfigureAuthorization(c =>
-            {
-                c.AddPolicy("Permission", b =>
-                {
-                    b.AddRequirements(new PermissionAuthorizationRequirements());
-                });
-            });
+            //services.AddPermissionAuthorization();
+            //services.ConfigureAuthorization(c =>
+            //{
+            //    c.AddPolicy("Permission", b =>
+            //    {
+            //        b.AddRequirements(new PermissionAuthorizationRequirements());
+            //    });
+            //    //c.AddPolicy("Permission", new PermissionAuthorizationPolicy());
+            //});
             // Add MVC services to the services container.
             services.AddMvc();
-
 
             services.ConfigureMvc(m =>
             {
@@ -108,13 +109,15 @@ namespace Eriador
             services.AddEriador();
             services.AddSingleton<IAuthService, AuthService>();
             services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddSingleton<IUserService, UserService>();
 
             // Uncomment the following line to add Web API services which makes it easier to port Web API 2 controllers.
             // You will also need to add the Microsoft.AspNet.Mvc.WebApiCompatShim package to the 'dependencies' section of project.json.
             services.AddWebApiConventions();
-            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, ClaimsAuthorizationHandler>());
-            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, DenyAnonymousAuthorizationHandler>());
-            services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, PassThroughAuthorizationHandler>());
+
+            //services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, ClaimsAuthorizationHandler>());
+            //services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, DenyAnonymousAuthorizationHandler>());
+            //services.Remove(ServiceDescriptor.Transient<IAuthorizationHandler, PassThroughAuthorizationHandler>());
         }
 
         // Configure is called after ConfigureServices is called.
@@ -161,7 +164,7 @@ namespace Eriador
                     defaults: new { controller = "Home", action = "Index" });
 
                 // Uncomment the following line to add a route for porting Web API 2 controllers.
-                // routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
+                //routes.MapWebApiRoute("DefaultApi", "api/{controller}/{id?}");
             });
         }
     }

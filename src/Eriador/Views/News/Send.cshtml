@@ -1,0 +1,15 @@
+﻿@model Eriador.Modules.News.Models.Data.Entity.NewsPaper
+
+<h2>Levél küldése</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.ValidationSummary(true, null, new { @class = "text-danger" })
+
+    <p>BizTosan el szeretnék küldeni a <strong>@Model.Title</strong> című hírlevelet?</p>
+
+    <a asp-controller="News" asp-action="Index" class="btn btn-default">Mégsem</a>
+    <button type="submit" class="btn btn-success">Küldés</button>
+}

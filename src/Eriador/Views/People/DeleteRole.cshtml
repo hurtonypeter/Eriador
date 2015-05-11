@@ -1,0 +1,17 @@
+﻿@model Eriador.Models.Data.Entity.Role
+
+<h2>Szerepkör törlése</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.Id)
+    @Html.HiddenFor(m => m.ConcurrencyStamp)
+
+    <p>Biztosan törölni szeretnéd a <strong>@Model.Name</strong> szerepkört?</p>
+    <p>
+        @Html.ActionLink("Mégsem", "Roles", "People", null, new { @class = "btn btn-default" })
+        <button type="submit" class="btn btn-danger"><i class="icon-ok"></i> Törlés</button>
+    </p>
+}

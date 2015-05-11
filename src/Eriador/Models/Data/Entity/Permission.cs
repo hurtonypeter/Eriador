@@ -14,7 +14,7 @@ namespace Eriador.Models.Data.Entity
         [Required]
         public string Name { get; set; }
 
-        public virtual ICollection<Role> Roles { get; set; }
+        public virtual ICollection<RolePermission> Roles { get; } = new List<RolePermission>();
 
         public virtual Module Module { get; set; }
 

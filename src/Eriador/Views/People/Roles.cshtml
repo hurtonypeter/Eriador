@@ -1,0 +1,30 @@
+﻿@model List<Eriador.Models.Data.Entity.Role>
+
+<h2>Szerepkörök</h2>
+
+<p style="float:left;">
+    <a href="@Url.Action("EditRole", "People")" class="btn btn-primary"><i class="icon-plus"></i> Új szerepkör létrehozása</a>
+</p>
+<p style="float:right;">
+    <a href="@Url.Action("Index", "People")" class="btn btn-default"><i class="icon-tags"></i> Felhasználók</a>&nbsp;&nbsp;
+    <a href="@Url.Action("Permissions", "People")" class="btn btn-default"><i class="icon-check"></i> Jogosultságok</a>
+</p>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Név</th>
+            <th>Műveletek</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>
+                    <a href="@Url.Action("EditRole", "People", new { id = item.Id })" class="btn btn-xs btn-default"><i class="icon-edit"></i> Szerkesztés</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

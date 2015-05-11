@@ -27,13 +27,13 @@ namespace Eriador.Framework.ViewComponents
 
             foreach (var item in mainmenus)
             {
-                if (item.Children != null && item.Children.Any(c => AuthService.HasPermission(c.Permission.MachineReadableName)))
+                if (item.Children != null && item.Children.Any(c => AuthService.HasPermission(c.Permission?.MachineReadableName)))
                 {
                     var tmp = item;
                     List<MenuItem> todelete = new List<MenuItem>();
                     foreach (var child in item.Children)
                     {
-                        if (!AuthService.HasPermission(child.Permission.MachineReadableName))
+                        if (!AuthService.HasPermission(child.Permission?.MachineReadableName))
                         {
                             todelete.Add(child);
                         }

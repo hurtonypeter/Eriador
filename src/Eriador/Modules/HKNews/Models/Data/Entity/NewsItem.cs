@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Eriador.Modules.HKNews.Models.Data.Entity
+namespace Eriador.Modules.News.Models.Data.Entity
 {
     public class NewsItem
     {

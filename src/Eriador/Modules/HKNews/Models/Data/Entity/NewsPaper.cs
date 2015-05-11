@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Eriador.Modules.HKNews.Models.Data.Entity
+namespace Eriador.Modules.News.Models.Data.Entity
 {
     public class NewsPaper
     {
@@ -18,10 +18,17 @@ namespace Eriador.Modules.HKNews.Models.Data.Entity
 
 		public DateTime LastEdited { get; set; }
 
-		public DateTime Sent { get; set; }
+		public DateTime? Sent { get; set; }
 
 		public string Title { get; set; }
 
-		public virtual ICollection<NewsItem> NewsItems { get; set; } 
+        public NewsPaperStatus Status { get; set; }
+
+        public virtual ICollection<NewsItem> NewsItems { get; set; } 
 	}
+
+    public enum NewsPaperStatus
+    {
+        Draft, Sent, Deleted
+    }
 }
